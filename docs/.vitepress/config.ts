@@ -1,7 +1,6 @@
 import { defineConfig } from 'vitepress';
 
-// Local dev defaults to `/`. CI sets VITEPRESS_BASE=/apiscope/ for GitHub project Pages.
-// When getapiscope.com DNS is live, set VITEPRESS_BASE=/ in docs.yml instead.
+// Local dev and CI both use `/` (site is served at https://getapiscope.com).
 const base = process.env.VITEPRESS_BASE ?? '/';
 
 export default defineConfig({

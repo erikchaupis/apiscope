@@ -166,18 +166,16 @@ npm run docs:preview   # optional — preview the built output
 
 Pushes to `main` that touch `docs/**` trigger [`.github/workflows/docs.yml`](.github/workflows/docs.yml), which builds the site and deploys to GitHub Pages.
 
-**Base path:** project Pages are served at `https://erikchaupis.github.io/apiscope/`, so CI sets `VITEPRESS_BASE=/apiscope/` when building. Local `npm run docs:dev` uses `base: /` by default.
+**Base path:** the site is served at [getapiscope.com](https://getapiscope.com) via GitHub Pages with a custom domain (`docs/public/CNAME`). CI and local dev both use `base: /`.
 
-Preview a production-like build locally:
+Preview a production build locally:
 
 ```bash
-VITEPRESS_BASE=/apiscope/ npm run docs:build
+npm run docs:build
 npm run docs:preview
 ```
 
-**Custom domain (`getapiscope.com`):** after DNS points to GitHub Pages, change `VITEPRESS_BASE` in `docs.yml` to `/` and redeploy. The site is then served from the domain root and `docs/public/CNAME` applies.
-
-To deploy manually, build with the matching `VITEPRESS_BASE` and upload `docs/.vitepress/dist/` to your static host.
+To deploy manually, build the site and upload `docs/.vitepress/dist/` to your static host.
 
 ## License
 

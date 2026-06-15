@@ -35,7 +35,7 @@ jobs:
 
       - name: Build static site
         env:
-          VITEPRESS_BASE: /apiscope/
+          VITEPRESS_BASE: /
         run: npm run build
         working-directory: docs
 
@@ -49,6 +49,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: https://erikchaupis.github.io/apiscope/
+      url: https://getapiscope.com/
     steps:
       - uses: actions/deploy-pages@v4
