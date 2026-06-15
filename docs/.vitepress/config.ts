@@ -11,11 +11,11 @@ export default defineConfig({
   base,
   cleanUrls: true,
   lastUpdated: true,
+  appearance: 'dark',
   head: [
     ['link', { rel: 'icon', href: '/logo.png', type: 'image/png' }],
     ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
-    ['meta', { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' }],
-    ['meta', { name: 'theme-color', content: '#0B1628', media: '(prefers-color-scheme: dark)' }],
+    ['meta', { name: 'theme-color', content: '#0B1628' }],
     ['meta', { property: 'og:image', content: 'https://getapiscope.com/logo.png' }],
     ['meta', { property: 'og:site_name', content: 'APIScope' }],
   ],

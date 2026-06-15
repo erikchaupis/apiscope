@@ -1,5 +1,5 @@
 /**
- * APIScope docs — light mode (default)
+ * APIScope docs — light mode
  * Matches APIScope Light / apiscope-light theme tokens
  */
 :root {
@@ -35,7 +35,7 @@
 }
 
 /**
- * APIScope docs — dark mode
+ * APIScope docs — dark mode (default)
  * Matches APIScope / apiscope theme tokens
  */
 .dark {
