@@ -4,7 +4,7 @@ layout: home
 hero:
   name: APIScope
   text: Source-code-aware API client
-  tagline: Discover REST endpoints from your codebase, generate collections automatically, and test with browser-like authentication — inside VS Code and Cursor.
+  tagline: Discover REST endpoints from your codebase, generate collections automatically, and test with global authentication — inside VS Code and Cursor.
   image:
     src: /logo.png
     alt: APIScope logo
@@ -30,8 +30,8 @@ features:
     title: Local-first workspace
     details: Collections, environments, history, and scans live in a portable `.apiscope/` directory beside your project.
   - icon: 🔐
-    title: Session authentication
-    details: Programmatic form login captures cookies and JWTs — credentials stay in VS Code Secret Storage, never on disk.
+    title: Global authentication
+    details: Session, bearer, basic, and API key auth per environment — credentials stay in VS Code Secret Storage, never on disk.
   - icon: ⚡
     title: Full request editor
     details: Headers, query params, JSON and multipart bodies, pre/post scripts, response tests, and file download handling.

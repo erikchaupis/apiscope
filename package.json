@@ -1,7 +1,7 @@
 {
   "name": "api-scope",
   "displayName": "APIScope",
-  "description": "APIScope — source-code-aware API client. Discover Spring Boot endpoints from source and test with browser-like authentication.",
+  "description": "APIScope — source-code-aware API client. Discover Spring Boot, Express, and FastAPI endpoints from source and test with global authentication.",
   "version": "1.0.0",
   "publisher": "erikchaupis",
   "license": "Apache-2.0",
@@ -17,6 +17,7 @@
     "color": "#0B1628",
     "theme": "dark"
   },
+  "icon": "media/logo.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -29,6 +30,10 @@
     "rest",
     "spring",
     "spring-boot",
+    "express",
+    "nodejs",
+    "fastapi",
+    "python",
     "http",
     "client",
     "collection",

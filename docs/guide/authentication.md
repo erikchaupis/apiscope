@@ -1,6 +1,6 @@
 # Authentication
 
-APIScope supports browser-like session login and per-request authorization — without storing credentials in `.apiscope/` files.
+APIScope supports global authentication and per-request authorization — without storing credentials in `.apiscope/` files.
 
 ## Global authentication
 

@@ -1,18 +1,43 @@
-# APIScope for Cursor
+# APIScope
 
 <p align="center">
   <img src="media/logo.png" alt="APIScope" width="80" />
 </p>
 
-APIScope is a source-code-aware API client for VS Code and Cursor. It discovers REST endpoints from application source code, generates collections automatically, and supports browser-like authentication — without Swagger or OpenAPI files.
+<p align="center">
+  <img src="docs/public/images/hero-main-panel.png" alt="APIScope main panel — collections tree, request editor, and JSON response" width="900" />
+</p>
+
+APIScope is a source-code-aware API client for VS Code and Cursor. It reads your application source code and turns controllers, routers, and endpoint definitions into a ready-to-use API client — inside your editor. A practical alternative when you want to work directly from the codebase rather than specs or hand-maintained collections.
+
+- Discover and test APIs directly from source code
+- Scan Spring Boot, Express, and FastAPI applications
+- Automatically generate API collections from source code
+- Source-code-first — works alongside OpenAPI and Swagger when those are part of your workflow
+- Collections stay in sync when you rescan
+- Useful for internal APIs, legacy systems, and codebases where the source is the best reference
 
 **Documentation:** [getapiscope.com](https://getapiscope.com)
 
+## Why APIScope?
+
+When the codebase is the most accurate picture of your API — or when you simply prefer working from source — exploring endpoints often means reading code in one place and rebuilding requests elsewhere.
+
+APIScope offers a direct path: scan application source code, generate collections from controllers, routers, and endpoint definitions, and send requests without leaving the editor.
+
+```text
+Source Code → APIScope → Send Request
+```
+
+## Ideal For
+
+- Backend developers exploring unfamiliar codebases
+- Projects where source code reflects the current API surface
+- Internal enterprise APIs
+- Legacy applications
+- Developers who live inside VS Code or Cursor
+
 ## See it in action
-
-The main panel combines a collections tree, request editor, and response viewer in one place:
-
-![APIScope main panel — collections tree, request editor, and JSON response](docs/public/images/hero-main-panel.png)
 
 The **Collections** sidebar gives quick access to scanned endpoints, environments, authentication, history, and scan. Requests show color-coded HTTP method badges; generated collections use a sparkle icon:
 
@@ -28,14 +53,14 @@ Send requests with headers, body, scripts, and response tests:
 
 ## Features
 
-- **Spring Boot, Express, FastAPI scanners** — no Swagger/OpenAPI required
-- **Generated Collection** — auto-populated from source, grouped by controller/router
-- **User collections** — create, import, export; never touched by rescans
-- **Environments** — `{{baseUrl}}` variables with tier badges (LOCAL, DEV, PROD, …)
-- **Session login** — form login with cookie capture; secrets in VS Code Secret Storage
-- **Request editor** — headers, JSON/multipart body, scripts, response tests
-- **History & drafts** — replay past executions; ad-hoc draft tabs
-- **File downloads** — binary response preview and persistence
+- **Discover endpoints directly from source code** — Spring Boot, Express, and FastAPI scanners
+- **Generate ready-to-use API collections automatically** — grouped by controller or router, refreshed on rescan
+- **Keep your own collections separate** — create, import, and export user collections that rescans never overwrite
+- **Switch environments without retyping URLs** — `{{baseUrl}}` variables with tier badges (LOCAL, DEV, PROD, …)
+- **Configure global authentication per environment** — session, bearer, basic, and API key; credentials stored in VS Code Secret Storage
+- **Send and inspect requests in one panel** — headers, JSON/multipart body, scripts, and response tests
+- **Replay past requests and draft new ones** — execution history and ad-hoc draft tabs
+- **Handle file downloads from API responses** — binary preview and persistence
 
 ## Supported frameworks
 
@@ -60,7 +85,7 @@ See the [Getting Started guide](https://getapiscope.com/guide/getting-started) f
 |---------|-------------|
 | `APIScope: Open APIScope` | Open the main panel |
 | `APIScope: Scan Endpoints` | Scan workspace and refresh collections |
-| `APIScope: Session Login` | Form login and cookie capture |
+| `APIScope: Open Global Authentication` | Configure session, bearer, basic, or API key auth |
 
 Full list: [getapiscope.com/guide/commands](https://getapiscope.com/guide/commands)
 
