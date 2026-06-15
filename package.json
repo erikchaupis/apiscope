@@ -1,0 +1,480 @@
+{
+  "name": "api-scope",
+  "displayName": "APIScope",
+  "description": "APIScope — source-code-aware API client. Discover Spring Boot endpoints from source and test with browser-like authentication.",
+  "version": "1.0.0",
+  "publisher": "erikchaupis",
+  "license": "Apache-2.0",
+  "homepage": "https://getapiscope.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikchaupis/apiscope.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erikchaupis/apiscope/issues"
+  },
+  "galleryBanner": {
+    "color": "#0B1628",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "api",
+    "rest",
+    "spring",
+    "spring-boot",
+    "http",
+    "client",
+    "collection",
+    "cursor",
+    "open-vsx"
+  ],
+  "activationEvents": [
+    "onView:apiScope.collections",
+    "onCommand:apiScope.open",
+    "onCommand:apiScope.openSource",
+    "onCommand:apiScope.scan",
+    "onCommand:apiScope.rescan",
+    "onCommand:apiScope.loginLikeBrowser",
+    "onCommand:apiScope.openEnvironmentsTab",
+    "onCommand:apiScope.openHistoryTab",
+    "onCommand:apiScope.openScanTab",
+    "onCommand:apiScope.openLoginTab",
+    "workspaceContains:**/pom.xml",
+    "workspaceContains:**/build.gradle"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "colors": [
+      {
+        "id": "apiScope.folder",
+        "description": "Folder icon color in the collections tree",
+        "defaults": {
+          "dark": "#FF9F0A",
+          "light": "#CA8A04"
+        }
+      },
+      {
+        "id": "apiScope.collectionGenerated",
+        "description": "Generated collection accent",
+        "defaults": {
+          "dark": "#3B82F6",
+          "light": "#2563EB"
+        }
+      },
+      {
+        "id": "apiScope.sourceLink",
+        "description": "Scanned request source link",
+        "defaults": {
+          "dark": "#58A6FF",
+          "light": "#2563EB"
+        }
+      },
+      {
+        "id": "apiScope.statusInfo",
+        "description": "Collections tree status info",
+        "defaults": {
+          "dark": "#4ec9b0",
+          "light": "#1a7f37"
+        }
+      },
+      {
+        "id": "apiScope.statusHint",
+        "description": "Collections tree hint text",
+        "defaults": {
+          "dark": "#858585",
+          "light": "#656d76"
+        }
+      }
+    ],
+    "submenus": [
+      {
+        "id": "apiScope.treeItemContext",
+        "label": "More Actions",
+        "icon": "$(ellipsis)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "apiScope.open",
+        "title": "Open APIScope",
+        "category": "APIScope",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "apiScope.openSource",
+        "title": "Open Source",
+        "category": "APIScope",
+        "icon": "$(code)"
+      },
+      {
+        "command": "apiScope.scan",
+        "title": "Scan Endpoints",
+        "category": "APIScope",
+        "icon": "$(search)"
+      },
+      {
+        "command": "apiScope.rescan",
+        "title": "Rescan Project",
+        "category": "APIScope",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "apiScope.loginLikeBrowser",
+        "title": "Session Login",
+        "category": "APIScope",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "apiScope.openLoginTab",
+        "title": "Open Global Authentication",
+        "category": "APIScope",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "apiScope.openEnvironmentsTab",
+        "title": "Manage Environments",
+        "category": "APIScope",
+        "icon": "$(layers)"
+      },
+      {
+        "command": "apiScope.openHistoryTab",
+        "title": "Open History",
+        "category": "APIScope",
+        "icon": "$(history)"
+      },
+      {
+        "command": "apiScope.openScanTab",
+        "title": "Open Scan",
+        "category": "APIScope",
+        "icon": "$(search)"
+      },
+      {
+        "command": "apiScope.refreshCollections",
+        "title": "Refresh Collections",
+        "category": "APIScope"
+      },
+      {
+        "command": "apiScope.newCollection",
+        "title": "New Collection",
+        "category": "APIScope",
+        "icon": "$(add)"
+      },
+      {
+        "command": "apiScope.importCollection",
+        "title": "Import Collection...",
+        "category": "APIScope",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "apiScope.exportCollection",
+        "title": "Export Collection...",
+        "category": "APIScope",
+        "icon": "$(export)"
+      },
+      {
+        "command": "apiScope.newFolder",
+        "title": "New Folder",
+        "category": "APIScope",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "apiScope.newRequest",
+        "title": "New Request",
+        "category": "APIScope",
+        "icon": "$(add)"
+      },
+      {
+        "command": "apiScope.duplicateCollection",
+        "title": "Duplicate Collection",
+        "category": "APIScope",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "apiScope.deleteCollection",
+        "title": "Delete Collection",
+        "category": "APIScope",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "apiScope.deleteRequest",
+        "title": "Delete Request",
+        "category": "APIScope",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "apiScope.renameCollection",
+        "title": "Rename Collection",
+        "category": "APIScope",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "apiScope.renameFolder",
+        "title": "Rename Folder",
+        "category": "APIScope",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "apiScope.renameRequest",
+        "title": "Rename Request",
+        "category": "APIScope",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "apiScope.deleteFolder",
+        "title": "Delete Folder",
+        "category": "APIScope",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "apiScope.duplicateRequest",
+        "title": "Duplicate Request",
+        "category": "APIScope",
+        "icon": "$(copy)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "apiScope",
+          "title": "APIScope",
+          "icon": "media/api-scope.svg"
+        }
+      ]
+    },
+    "views": {
+      "apiScope": [
+        {
+          "id": "apiScope.collections",
+          "name": "Collections"
+        }
+      ]
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "apiScope.open",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.openSource",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.scan",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.rescan",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.loginLikeBrowser",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.openLoginTab",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.openEnvironmentsTab",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.openHistoryTab",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "apiScope.openScanTab",
+          "when": "workspaceFolderCount > 0"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "apiScope.importCollection",
+          "when": "view == apiScope.collections",
+          "group": "navigation@0"
+        },
+        {
+          "command": "apiScope.newCollection",
+          "when": "view == apiScope.collections",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "submenu": "apiScope.treeItemContext",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.(collection|folder|request)/",
+          "group": "inline@1"
+        },
+        {
+          "command": "apiScope.newFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.(collection|folder)\\./",
+          "group": "1_new@1"
+        },
+        {
+          "command": "apiScope.newRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.(collection|folder)\\.user/",
+          "group": "1_new@2"
+        },
+        {
+          "command": "apiScope.openSource",
+          "when": "view == apiScope.collections && viewItem == apiScope.request.scanned",
+          "group": "2_actions@1"
+        },
+        {
+          "command": "apiScope.renameRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "2_actions@2"
+        },
+        {
+          "command": "apiScope.duplicateRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "2_actions@3"
+        },
+        {
+          "command": "apiScope.renameFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.folder\\./",
+          "group": "2_actions@4"
+        },
+        {
+          "command": "apiScope.renameCollection",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.user",
+          "group": "2_actions@5"
+        },
+        {
+          "command": "apiScope.duplicateCollection",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.collection\\./",
+          "group": "2_actions@6"
+        },
+        {
+          "command": "apiScope.exportCollection",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.collection\\./",
+          "group": "2_actions@7"
+        },
+        {
+          "command": "apiScope.rescan",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.generated",
+          "group": "2_actions@8"
+        },
+        {
+          "command": "apiScope.deleteRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "3_delete@1"
+        },
+        {
+          "command": "apiScope.deleteFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.folder\\./",
+          "group": "3_delete@2"
+        },
+        {
+          "command": "apiScope.deleteCollection",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.user",
+          "group": "3_delete@3"
+        }
+      ],
+      "apiScope.treeItemContext": [
+        {
+          "command": "apiScope.newFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.(collection|folder)\\./",
+          "group": "1_new@1"
+        },
+        {
+          "command": "apiScope.newRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.(collection|folder)\\.user/",
+          "group": "1_new@2"
+        },
+        {
+          "command": "apiScope.openSource",
+          "when": "view == apiScope.collections && viewItem == apiScope.request.scanned",
+          "group": "2_actions@1"
+        },
+        {
+          "command": "apiScope.renameRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "2_actions@2"
+        },
+        {
+          "command": "apiScope.duplicateRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "2_actions@3"
+        },
+        {
+          "command": "apiScope.renameFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.folder\\./",
+          "group": "2_actions@4"
+        },
+        {
+          "command": "apiScope.renameCollection",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.user",
+          "group": "2_actions@5"
+        },
+        {
+          "command": "apiScope.duplicateCollection",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.collection\\./",
+          "group": "2_actions@6"
+        },
+        {
+          "command": "apiScope.exportCollection",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.collection\\./",
+          "group": "2_actions@7"
+        },
+        {
+          "command": "apiScope.rescan",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.generated",
+          "group": "2_actions@8"
+        },
+        {
+          "command": "apiScope.deleteRequest",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.request/",
+          "group": "3_delete@1"
+        },
+        {
+          "command": "apiScope.deleteFolder",
+          "when": "view == apiScope.collections && viewItem =~ /^apiScope\\.folder\\./",
+          "group": "3_delete@2"
+        },
+        {
+          "command": "apiScope.deleteCollection",
+          "when": "view == apiScope.collections && viewItem == apiScope.collection.user",
+          "group": "3_delete@3"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "npm run build:extension && npm run build:webview",
+    "build:extension": "node esbuild.js",
+    "build:webview": "cd webview-ui && npm run build",
+    "watch": "node esbuild.js --watch",
+    "watch:webview": "cd webview-ui && npm run dev",
+    "install:all": "npm install && cd webview-ui && npm install",
+    "verify:package": "npx @vscode/vsce ls 2>/dev/null | grep -q 'webview-ui/dist/assets/index.js' || (echo 'ERROR: webview assets missing from VSIX' >&2 && exit 1)",
+    "validate:spring-sample": "tsx scripts/scan-spring-sample.ts",
+    "validate:express-sample": "tsx scripts/scan-express-sample.ts",
+    "validate:fastapi-sample": "tsx scripts/scan-fastapi-sample.ts",
+    "docs:install": "cd docs && npm install",
+    "docs:dev": "cd docs && npm run dev",
+    "docs:build": "cd docs && npm run build",
+    "docs:preview": "cd docs && npm run preview"
+  },
+  "devDependencies": {
+    "@types/form-data": "^2.5.2",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "tsx": "^4.22.4",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "acorn": "^8.16.0",
+    "form-data": "^4.0.5"
+  }
+}

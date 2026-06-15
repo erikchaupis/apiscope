@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Extension build output
+dist/
+webview-ui/node_modules/
+webview-ui/dist/
+*.vsix
+
+# TypeScript / extension tooling
+*.tsbuildinfo
+.vscode-test/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+
+# Documentation site (see also docs/.gitignore)
+docs/node_modules/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+docs/.vitepress/.temp/
+
+# APIScope workspace runtime data
+sample-projects/**/.apiscope/
+# .apiscope/
+
+# Sample projects — framework runtime
+sample-projects/**/target/
+sample-projects/**/node_modules/
+sample-projects/**/__pycache__/
+sample-projects/**/.venv/
+sample-projects/**/uploads/*
+!sample-projects/**/uploads/.gitkeep
+
+# Logs
+*.log

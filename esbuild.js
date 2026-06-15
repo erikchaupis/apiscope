@@ -1,0 +1,24 @@
+const esbuild = require('esbuild');
+
+const watch = process.argv.includes('--watch');
+
+const ctx = esbuild.context({
+  entryPoints: ['src/extension.ts'],
+  bundle: true,
+  outfile: 'dist/extension.js',
+  external: ['vscode'],
+  format: 'cjs',
+  platform: 'node',
+  sourcemap: true,
+  target: 'node18',
+  logLevel: 'info',
+});
+
+if (watch) {
+  ctx.then((c) => c.watch()).then(() => console.log('Watching extension...'));
+} else {
+  ctx.then(async (c) => {
+    await c.rebuild();
+    await c.dispose();
+  });
+}

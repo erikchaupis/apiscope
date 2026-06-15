@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Tickets</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+  <header class="page-header">
+    <div class="page-header__inner">
+      <span class="page-header__user" th:text="|Hi, ${username}|">Hi, user</span>
+      <form th:action="@{/logout}" method="post">
+        <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn--logout">Logout</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <h1>Tickets</h1>
+
+    <div class="toolbar">
+      <a class="btn" th:href="@{/tickets/new}">Create Ticket</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="ticket : ${tickets}">
+          <td th:text="${ticket.id}"></td>
+          <td th:text="${ticket.name}"></td>
+          <td th:text="${ticket.description}"></td>
+          <td class="actions">
+            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a>
+            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post">
+              <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(tickets)}">
+          <td colspan="4">No tickets yet.</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

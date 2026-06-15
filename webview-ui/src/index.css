@@ -1,0 +1,396 @@
+@import './styles/themes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [data-theme='light'],
+  [data-theme='apiscope-light'] {
+    color-scheme: light;
+  }
+  [data-theme='dark'],
+  [data-theme='graphite'],
+  [data-theme='high-contrast'],
+  [data-theme='apiscope'],
+  [data-theme='solar'] {
+    color-scheme: dark;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+#root {
+  height: 100vh;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.method-get { color: var(--as-method-get); }
+.method-post { color: var(--as-method-post); }
+.method-put { color: var(--as-method-put); }
+.method-patch { color: var(--as-method-patch); }
+.method-delete { color: var(--as-method-delete); }
+
+.tab-tag-request {
+  background: var(--as-tab-request-bg);
+  color: var(--as-tab-request-fg);
+}
+.tab-tag-history {
+  background: var(--as-tab-history-bg);
+  color: var(--as-tab-history-fg);
+}
+.tab-tag-scan {
+  background: var(--as-tab-scan-bg);
+  color: var(--as-tab-scan-fg);
+}
+.tab-tag-draft {
+  background: var(--as-tab-draft-bg);
+  color: var(--as-tab-draft-fg);
+}
+.tab-tag-environment {
+  background: var(--as-tab-environment-bg);
+  color: var(--as-tab-environment-fg);
+}
+
+.env-list-item-active {
+  box-shadow: inset 3px 0 0 var(--as-env-active-border);
+}
+
+.env-tier-local {
+  background: var(--environment-local-bg);
+  color: var(--environment-local-fg);
+}
+.env-tier-dev {
+  background: var(--environment-dev-bg);
+  color: var(--environment-dev-fg);
+}
+.env-tier-uat {
+  background: var(--environment-uat-bg);
+  color: var(--environment-uat-fg);
+}
+.env-tier-staging {
+  background: var(--environment-staging-bg);
+  color: var(--environment-staging-fg);
+}
+.env-tier-prod {
+  background: var(--environment-prod-bg);
+  color: var(--environment-prod-fg);
+}
+.env-tier-custom {
+  background: var(--environment-custom-bg);
+  color: var(--environment-custom-fg);
+}
+.tab-tag-login {
+  background: var(--as-tab-login-bg);
+  color: var(--as-tab-login-fg);
+}
+
+.toolbar-btn-environment {
+  background: var(--as-tab-environment-bg);
+  color: var(--as-tab-environment-fg);
+}
+.toolbar-btn-environment:hover {
+  filter: brightness(1.08);
+}
+.toolbar-btn-login {
+  background: var(--as-tab-login-bg);
+  color: var(--as-tab-login-fg);
+}
+.toolbar-btn-login:hover {
+  filter: brightness(1.08);
+}
+.toolbar-btn-history {
+  background: var(--as-tab-history-bg);
+  color: var(--as-tab-history-fg);
+}
+.toolbar-btn-history:hover {
+  filter: brightness(1.08);
+}
+.toolbar-btn-scan {
+  background: var(--as-tab-scan-bg);
+  color: var(--as-tab-scan-fg);
+}
+.toolbar-btn-scan:hover {
+  filter: brightness(1.08);
+}
+.toolbar-auth-chip {
+  background: var(--as-tab-login-bg);
+  color: var(--as-tab-login-fg);
+  border-color: transparent;
+}
+.toolbar-auth-chip:hover {
+  filter: brightness(1.08);
+}
+.toolbar-auth-chip-authenticated {
+  background: color-mix(in srgb, var(--as-success) 14%, transparent);
+  color: var(--as-success);
+  border: 1px solid color-mix(in srgb, var(--as-success) 35%, transparent);
+}
+.toolbar-auth-chip-authenticated:hover {
+  background: color-mix(in srgb, var(--as-success) 22%, transparent);
+}
+.toolbar-auth-chip-muted {
+  background: transparent;
+  color: var(--as-muted);
+  border-color: var(--as-border);
+}
+.toolbar-auth-chip-muted:hover {
+  background: var(--as-tab-login-bg);
+  color: var(--as-tab-login-fg);
+  border-color: transparent;
+}
+
+.btn-logout {
+  background: color-mix(in srgb, var(--as-danger) 12%, transparent);
+  color: var(--as-danger);
+  border-color: color-mix(in srgb, var(--as-danger) 35%, transparent);
+}
+.btn-logout:hover {
+  background: color-mix(in srgb, var(--as-danger) 22%, transparent);
+}
+
+.shiki-container pre {
+  margin: 0;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.shiki-container code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.shiki-editor-backdrop pre,
+.shiki-editor-backdrop code {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.shiki-editor-backdrop pre {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.shiki-editor-backdrop code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.shiki-editor-backdrop .line {
+  display: inline;
+}
+
+.json-body-highlight {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.json-var-name {
+  font-weight: 500;
+}
+
+.syntax-highlight-textarea {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  caret-color: var(--as-foreground);
+  position: relative;
+  z-index: 1;
+}
+
+.syntax-highlight-textarea::selection {
+  background: var(--as-selection);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Brand logo SVG fills ── */
+.brand-logo-bg {
+  fill: var(--as-brand-logo-bg);
+}
+.brand-logo-ring {
+  stroke: var(--as-brand-logo-ring);
+}
+.brand-logo-ring-stroke {
+  stroke: var(--as-brand-logo-ring);
+}
+.brand-logo-block-light {
+  fill: var(--as-brand-logo-block-light);
+}
+.brand-logo-block-accent {
+  fill: var(--as-brand-logo-block-accent);
+}
+.brand-logo-block-cyan {
+  fill: var(--as-brand-logo-block-cyan);
+}
+.brand-logo-speed-stroke {
+  stroke: var(--as-brand-logo-speed);
+}
+
+/* ── Toolbar ── */
+.app-toolbar {
+  background: linear-gradient(
+    90deg,
+    var(--as-toolbar-gradient-from) 0%,
+    var(--as-toolbar-gradient-to) 55%,
+    var(--as-surface) 100%
+  );
+}
+.brand-wordmark-api {
+  color: var(--as-wordmark-api);
+}
+.brand-wordmark-scope {
+  color: var(--as-wordmark-scope);
+}
+
+/* ── Send button ── */
+.btn-send {
+  background: linear-gradient(
+    135deg,
+    var(--as-primary-gradient-from) 0%,
+    var(--as-primary-gradient-to) 100%
+  );
+  color: var(--as-primary-foreground);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--as-primary) 35%, transparent);
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-send:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--as-primary) 40%, transparent);
+}
+.btn-send:disabled {
+  background: var(--as-accent);
+  color: var(--as-muted);
+  box-shadow: none;
+}
+
+/* ── Workspace tabs ── */
+.workspace-tab {
+  position: relative;
+  border-bottom: 2px solid transparent;
+}
+.workspace-tab-active {
+  background: var(--as-background);
+  border-bottom-color: transparent;
+  font-weight: 600;
+}
+.workspace-tab-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--as-primary-gradient-from),
+    var(--as-primary-gradient-to)
+  );
+}
+.workspace-tab-inactive {
+  background: var(--as-surface);
+}
+.workspace-tab-inactive:hover {
+  background: color-mix(in srgb, var(--as-accent) 50%, transparent);
+}
+
+/* ── Editor tabs (Request / Scripts / Tests) ── */
+.editor-tab-active {
+  border-bottom-color: var(--as-primary) !important;
+  background: color-mix(in srgb, var(--as-primary) 8%, transparent);
+  font-weight: 600;
+}
+.editor-tab-active-secondary {
+  border-bottom-color: color-mix(in srgb, var(--as-primary) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--as-primary) 6%, transparent);
+  font-weight: 600;
+}
+
+/* ── Response Body / Headers format toggle ── */
+.response-format-toggle-btn {
+  color: var(--as-muted);
+  background: transparent;
+}
+.response-format-toggle-btn:hover:not(:disabled) {
+  color: var(--as-foreground);
+  background: color-mix(in srgb, var(--as-accent) 80%, transparent);
+}
+.response-format-toggle-btn-active {
+  color: var(--as-foreground);
+  background: color-mix(in srgb, var(--as-primary) 10%, var(--as-accent));
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--as-primary) 18%, transparent);
+}
+
+/* ── Response capture REC toggle ── */
+.btn-rec-off {
+  border-color: var(--as-border);
+  background: transparent;
+  color: var(--as-muted);
+}
+.btn-rec-off:hover {
+  background: var(--as-accent);
+  border-color: var(--as-muted);
+}
+.btn-rec-off .btn-rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 2px solid var(--as-muted);
+  background: transparent;
+}
+.btn-rec-on {
+  border-color: color-mix(in srgb, var(--as-danger) 50%, transparent);
+  background: color-mix(in srgb, var(--as-danger) 14%, transparent);
+  color: var(--as-danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--as-danger) 20%, transparent);
+}
+.btn-rec-on:hover {
+  background: color-mix(in srgb, var(--as-danger) 22%, transparent);
+}
+.btn-rec-on .btn-rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--as-danger);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--as-danger) 60%, transparent);
+  animation: rec-pulse 1.8s ease-in-out infinite;
+}
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+/* ── Collection tree selected rail ── */
+.tree-row-selected {
+  box-shadow: inset 3px 0 0 var(--as-tree-selected-rail);
+}

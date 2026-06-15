@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${isEdit} ? 'Edit Ticket' : 'Create Ticket'">Ticket Form</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+  <main>
+    <h1 th:text="${isEdit} ? 'Edit Ticket' : 'Create Ticket'">Ticket Form</h1>
+
+    <form th:action="${isEdit} ? @{/tickets/{id}(id=${ticket.id})} : @{/tickets}" method="post">
+      <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" th:value="${ticket.name}" required/>
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" th:text="${ticket.description}"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" th:text="${isEdit} ? 'Update' : 'Create'">Save</button>
+        <a th:href="@{/tickets}">Cancel</a>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

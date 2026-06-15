@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <!-- Rounded square frame — 2.5px ring (was 1.5px) -->
+  <path fill-rule="evenodd" clip-rule="evenodd"
+    d="M7 4C5.343 4 4 5.343 4 7v10c0 1.657 1.343 3 3 3h10c1.657 0 3-1.343 3-3V7c0-1.657-1.343-3-3-3H7z
+       M6.5 6.5h11c1.933 0 3.5 1.567 3.5 3.5v11c0 1.933-1.567 3.5-3.5 3.5h-11c-1.933 0-3.5-1.567-3.5-3.5v-11c0-1.933 1.567-3.5 3.5-3.5z"/>
+  <!-- A — wider legs, thicker crossbar -->
+  <path d="M7.25 17L12 5.5 16.75 17h-2.25l-1.2-3.25H10.45L9.25 17H7.25z"/>
+</svg>
