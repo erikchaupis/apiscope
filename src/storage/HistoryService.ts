@@ -22,7 +22,7 @@ import {
   pathFromUrl,
   requestSignature,
 } from '../core/historyTypes';
-import { ensureApiscopeLayout, getApiscopeDir } from './ApiScopeStorage';
+import { apiscopeExists, ensureApiscopeRoot, getApiscopeDir } from './ApiScopeStorage';
 
 const HISTORY_DIR = 'history';
 const LEGACY_ENTRIES_DIR = 'entries';
@@ -139,7 +139,7 @@ function isNewGlobalIndex(raw: unknown): raw is HistoryGlobalIndex {
 }
 
 function ensureHistoryRoot(workspaceRoot: string): void {
-  ensureApiscopeLayout(workspaceRoot);
+  ensureApiscopeRoot(workspaceRoot);
   const root = historyRoot(workspaceRoot);
   if (!fs.existsSync(root)) {
     fs.mkdirSync(root, { recursive: true });
@@ -323,7 +323,6 @@ function removeLegacyStorage(workspaceRoot: string): void {
 }
 
 function migrateLegacyHistory(workspaceRoot: string): boolean {
-  ensureHistoryRoot(workspaceRoot);
   const indexFile = globalIndexPath(workspaceRoot);
   const legacyDir = legacyEntriesDir(workspaceRoot);
   const raw = fs.existsSync(indexFile)
@@ -412,14 +411,30 @@ export class HistoryService {
     if (this.initialized) {
       return;
     }
+    if (!apiscopeExists(this.workspaceRoot)) {
+      this.initialized = true;
+      return;
+    }
     ensureHistoryRoot(this.workspaceRoot);
     migrateLegacyHistory(this.workspaceRoot);
     this.globalIndex = readGlobalIndexFromDisk(this.workspaceRoot);
     if (!fs.existsSync(globalIndexPath(this.workspaceRoot))) {
       writeGlobalIndex(this.workspaceRoot, this.globalIndex);
     }
-    this.loadRecentDays(DEFAULT_RECENT_HISTORY_DAYS);
     this.initialized = true;
+    this.loadRecentDays(DEFAULT_RECENT_HISTORY_DAYS);
+  }
+
+  private collectLoadedSummaries(): HistoryIndexEntry[] {
+    const entries: HistoryIndexEntry[] = [];
+    const loadedDays = this.globalIndex.days.slice(0, this.loadedDayCount);
+    for (const dayPath of loadedDays) {
+      const daily = this.loadedDailyIndexes.get(dayPath);
+      if (daily) {
+        entries.push(...daily.entries.map(dailySummaryToIndexEntry));
+      }
+    }
+    return entries;
   }
 
   getRecentDays(limit = DEFAULT_RECENT_HISTORY_DAYS): string[] {
@@ -458,15 +473,13 @@ export class HistoryService {
   }
 
   listLoadedSummaries(): HistoryIndexEntry[] {
-    const entries: HistoryIndexEntry[] = [];
-    const loadedDays = this.globalIndex.days.slice(0, this.loadedDayCount);
-    for (const dayPath of loadedDays) {
-      const daily = this.loadedDailyIndexes.get(dayPath);
-      if (daily) {
-        entries.push(...daily.entries.map(dailySummaryToIndexEntry));
-      }
+    if (!apiscopeExists(this.workspaceRoot)) {
+      return [];
     }
-    return entries;
+    if (!this.initialized) {
+      this.initialize();
+    }
+    return this.collectLoadedSummaries();
   }
 
   loadRecentDays(count: number): HistoryIndexEntry[] {
@@ -479,7 +492,7 @@ export class HistoryService {
       }
     }
     this.loadedDayCount = Math.max(this.loadedDayCount, end);
-    return this.listLoadedSummaries();
+    return this.collectLoadedSummaries();
   }
 
   loadNextDays(count: number): HistoryIndexEntry[] {
@@ -492,7 +505,7 @@ export class HistoryService {
       }
     }
     this.loadedDayCount = end;
-    return this.listLoadedSummaries();
+    return this.collectLoadedSummaries();
   }
 
   hasMoreDays(): boolean {
@@ -513,6 +526,9 @@ export class HistoryService {
   }
 
   recordHistoryEntry(input: RecordHistoryInput): HistoryEntry {
+    if (!this.initialized) {
+      this.initialize();
+    }
     const id = nextHistoryId(this.globalIndex.lastEntryId);
     const timestamp = new Date().toISOString();
     const resolvedPath = input.path ?? pathFromUrl(input.resolvedUrl);
@@ -596,7 +612,6 @@ export function getHistoryService(workspaceRoot: string): HistoryService {
   let service = services.get(workspaceRoot);
   if (!service) {
     service = new HistoryService(workspaceRoot);
-    service.initialize();
     services.set(workspaceRoot, service);
   }
   return service;

@@ -141,19 +141,45 @@ function ensureGitignore(workspaceRoot: string): void {
   }
 }
 
-export function ensureApiscopeLayout(workspaceRoot: string): void {
-  const root = getApiscopeDir(workspaceRoot);
-  ensureDir(root);
-  ensureDir(collectionsDir(workspaceRoot));
-  ensureDir(environmentsDir(workspaceRoot));
-  ensureDir(scansDir(workspaceRoot));
-  ensureDir(path.join(root, HISTORY_DIR));
-  ensureDir(path.join(root, DRAFTS_DIR));
-  ensureDir(path.join(root, DOWNLOADS_DIR));
+export function apiscopeExists(workspaceRoot: string): boolean {
+  return fs.existsSync(getApiscopeDir(workspaceRoot));
+}
+
+/** Creates `.apiscope/`, `.gitignore`, and runs legacy migrations only. */
+export function ensureApiscopeRoot(workspaceRoot: string): void {
+  ensureDir(getApiscopeDir(workspaceRoot));
   ensureGitignore(workspaceRoot);
   migrateLegacyStorage(workspaceRoot);
+}
+
+/** Lazy init for collections: root layout + `collections/`. */
+export function ensureApiscopeForCollections(workspaceRoot: string): void {
+  ensureApiscopeRoot(workspaceRoot);
+  ensureDir(collectionsDir(workspaceRoot));
   migrateMonolithicCollections(workspaceRoot);
+}
+
+/** Lazy init for environments: root layout + `environments/`. */
+export function ensureApiscopeForEnvironments(workspaceRoot: string): void {
+  ensureApiscopeRoot(workspaceRoot);
+  ensureDir(environmentsDir(workspaceRoot));
   migrateFlatEnvironments(workspaceRoot);
+}
+
+/** Lazy init for scan metadata: root layout + `scans/`. */
+export function ensureApiscopeForScans(workspaceRoot: string): void {
+  ensureApiscopeRoot(workspaceRoot);
+  ensureDir(scansDir(workspaceRoot));
+}
+
+/** Ensures every on-disk workspace subdirectory (tests and explicit full init). */
+export function ensureApiscopeLayout(workspaceRoot: string): void {
+  ensureApiscopeForCollections(workspaceRoot);
+  ensureApiscopeForEnvironments(workspaceRoot);
+  ensureApiscopeForScans(workspaceRoot);
+  ensureDir(path.join(getApiscopeDir(workspaceRoot), HISTORY_DIR));
+  ensureDir(path.join(getApiscopeDir(workspaceRoot), DRAFTS_DIR));
+  ensureDir(path.join(getApiscopeDir(workspaceRoot), DOWNLOADS_DIR));
 }
 
 // ── Legacy migration (collections.json → folder structure) ──────────────────
@@ -285,6 +311,9 @@ function legacyRequestToCollectionRequest(r: LegacyRequest): CollectionRequest {
 
 function migrateMonolithicCollections(workspaceRoot: string): void {
   const dir = collectionsDir(workspaceRoot);
+  if (!fs.existsSync(dir)) {
+    return;
+  }
   if (fs.existsSync(indexPath(workspaceRoot))) {
     return;
   }
@@ -324,12 +353,14 @@ function migrateMonolithicCollections(workspaceRoot: string): void {
 // ── Index ───────────────────────────────────────────────────────────────────
 
 export function loadCollectionsIndex(workspaceRoot: string): CollectionsIndex {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return { collections: [] };
+  }
   return readJson<CollectionsIndex>(indexPath(workspaceRoot), { collections: [] });
 }
 
 export function saveCollectionsIndex(workspaceRoot: string, index: CollectionsIndex): void {
-  ensureDir(collectionsDir(workspaceRoot));
+  ensureApiscopeForCollections(workspaceRoot);
   writeJson(indexPath(workspaceRoot), index);
 }
 
@@ -517,12 +548,15 @@ function saveConfigRaw(workspaceRoot: string, config: ApiScopeConfig): void {
 }
 
 export function loadConfig(workspaceRoot: string): ApiScopeConfig {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return defaultConfig();
+  }
+  ensureApiscopeRoot(workspaceRoot);
   return loadConfigRaw(workspaceRoot);
 }
 
 export function saveConfig(workspaceRoot: string, config: ApiScopeConfig): void {
-  ensureApiscopeLayout(workspaceRoot);
+  ensureApiscopeRoot(workspaceRoot);
   saveConfigRaw(workspaceRoot, config);
 }
 
@@ -534,6 +568,7 @@ function loadCollectionMetadata(workspaceRoot: string, id: string): CollectionMe
 }
 
 function saveCollectionMetadata(workspaceRoot: string, metadata: CollectionMetadata): void {
+  ensureApiscopeForCollections(workspaceRoot);
   ensureDir(collectionDir(workspaceRoot, metadata.id));
   writeJson(path.join(collectionDir(workspaceRoot, metadata.id), COLLECTION_META_FILE), metadata);
 }
@@ -629,7 +664,10 @@ export function loadCollection(workspaceRoot: string, id: string): Collection | 
 }
 
 export function loadAllCollections(workspaceRoot: string): Collection[] {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return [];
+  }
+  ensureApiscopeForCollections(workspaceRoot);
   const index = loadCollectionsIndex(workspaceRoot);
   const collections: Collection[] = [];
   for (const entry of index.collections) {
@@ -648,7 +686,7 @@ export function persistCollection(
   collection: Collection,
   index?: CollectionsIndex
 ): void {
-  ensureDir(collectionsDir(workspaceRoot));
+  ensureApiscopeForCollections(workspaceRoot);
   ensureDir(collectionDir(workspaceRoot, collection.id));
 
   const metadata: CollectionMetadata = {
@@ -1018,7 +1056,7 @@ export function deleteCollectionFile(workspaceRoot: string, id: string): void {
 }
 
 export function nextUserCollectionId(workspaceRoot: string): string {
-  ensureApiscopeLayout(workspaceRoot);
+  ensureApiscopeForCollections(workspaceRoot);
   const index = loadCollectionsIndex(workspaceRoot);
   const existing = index.collections
     .map((c) => {
@@ -1221,6 +1259,9 @@ function removeEnvironmentIndexEntry(index: EnvironmentsIndex, id: string): void
 
 function migrateFlatEnvironments(workspaceRoot: string): void {
   const dir = environmentsDir(workspaceRoot);
+  if (!fs.existsSync(dir)) {
+    return;
+  }
   if (fs.existsSync(envIndexPath(workspaceRoot))) {
     return;
   }
@@ -1254,7 +1295,10 @@ function migrateFlatEnvironments(workspaceRoot: string): void {
 }
 
 export function loadEnvironmentsIndex(workspaceRoot: string): EnvironmentsIndex {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return { environments: [] };
+  }
+  ensureApiscopeRoot(workspaceRoot);
   const index = readJson<EnvironmentsIndex>(envIndexPath(workspaceRoot), { environments: [] });
   return {
     environments: index.environments.map((entry) => {
@@ -1269,7 +1313,7 @@ export function loadEnvironmentsIndex(workspaceRoot: string): EnvironmentsIndex 
 }
 
 export function saveEnvironmentsIndex(workspaceRoot: string, index: EnvironmentsIndex): void {
-  ensureDir(environmentsDir(workspaceRoot));
+  ensureApiscopeForEnvironments(workspaceRoot);
   writeJson(envIndexPath(workspaceRoot), index);
 }
 
@@ -1301,7 +1345,10 @@ export function loadEnvironment(workspaceRoot: string, id: string): Environment 
 }
 
 export function loadAllEnvironments(workspaceRoot: string): Environment[] {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return [];
+  }
+  ensureApiscopeForEnvironments(workspaceRoot);
   const index = loadEnvironmentsIndex(workspaceRoot);
   const environments: Environment[] = [];
   for (const entry of index.environments) {
@@ -1320,7 +1367,7 @@ export function persistEnvironment(
   environment: Environment,
   index?: EnvironmentsIndex
 ): void {
-  ensureDir(environmentsDir(workspaceRoot));
+  ensureApiscopeForEnvironments(workspaceRoot);
   ensureDir(environmentDir(workspaceRoot, environment.id));
   writeJson(path.join(environmentDir(workspaceRoot, environment.id), ENV_FILE), environment);
 
@@ -1385,12 +1432,14 @@ export function nextEnvironmentId(workspaceRoot: string): string {
 // ── Scans ─────────────────────────────────────────────────────────────────────
 
 export function saveLastScan(workspaceRoot: string, record: LastScanRecord): void {
-  ensureApiscopeLayout(workspaceRoot);
+  ensureApiscopeForScans(workspaceRoot);
   writeJson(path.join(scansDir(workspaceRoot), LAST_SCAN_FILE), record);
 }
 
 export function loadLastScan(workspaceRoot: string): LastScanRecord | undefined {
-  ensureApiscopeLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return undefined;
+  }
   const file = path.join(scansDir(workspaceRoot), LAST_SCAN_FILE);
   return readJson<LastScanRecord | undefined>(file, undefined);
 }

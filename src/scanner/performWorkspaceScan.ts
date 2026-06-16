@@ -1,6 +1,11 @@
 import { Collection, ScanSummary } from '../core/types';
 import { CollectionManager } from '../collections/CollectionManager';
 import { EnvironmentManager } from '../environment/EnvironmentManager';
+import {
+  apiscopeExists,
+  ensureApiscopeForCollections,
+  ensureApiscopeForEnvironments,
+} from '../storage/ApiScopeStorage';
 import { getScannerForProject } from './ScannerRegistry';
 
 export interface WorkspaceScanResult {
@@ -17,6 +22,9 @@ export async function performWorkspaceScan(
   if (!scanner) {
     return null;
   }
+
+  ensureApiscopeForCollections(workspaceRoot);
+  ensureApiscopeForEnvironments(workspaceRoot);
 
   const envManager = new EnvironmentManager();
   const collectionManager = new CollectionManager(envManager);

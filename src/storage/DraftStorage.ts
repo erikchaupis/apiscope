@@ -9,7 +9,7 @@ import {
   pathFromUrl,
 } from '../core/historyTypes';
 import type { ApiRequest, HttpMethod, KeyValuePair } from '../core/types';
-import { ensureApiscopeLayout, getApiscopeDir } from './ApiScopeStorage';
+import { ensureApiscopeRoot, getApiscopeDir, apiscopeExists } from './ApiScopeStorage';
 
 const DRAFTS_DIR = 'drafts';
 
@@ -17,12 +17,15 @@ function draftsDir(workspaceRoot: string): string {
   return path.join(getApiscopeDir(workspaceRoot), DRAFTS_DIR);
 }
 
-function ensureDraftsLayout(workspaceRoot: string): void {
-  ensureApiscopeLayout(workspaceRoot);
-  const dir = draftsDir(workspaceRoot);
+function ensureDir(dir: string): void {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
+}
+
+function ensureDraftsLayout(workspaceRoot: string): void {
+  ensureApiscopeRoot(workspaceRoot);
+  ensureDir(draftsDir(workspaceRoot));
 }
 
 function readJson<T>(file: string, fallback: T): T {
@@ -78,8 +81,13 @@ function toSummary(doc: DraftDocument): DraftSummary {
 }
 
 export function listDrafts(workspaceRoot: string): DraftSummary[] {
-  ensureDraftsLayout(workspaceRoot);
+  if (!apiscopeExists(workspaceRoot)) {
+    return [];
+  }
   const dir = draftsDir(workspaceRoot);
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
   const drafts: DraftDocument[] = [];
   for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
     const doc = readJson<DraftDocument | undefined>(path.join(dir, file), undefined);

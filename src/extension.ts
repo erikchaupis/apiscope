@@ -10,7 +10,7 @@ import type { CollectionRequest } from './core/types';
 import { detectProjectFramework } from './scanner/detectProjectFramework';
 import { performWorkspaceScan } from './scanner/performWorkspaceScan';
 import { isScannableSourceFile } from './scanner/scannableSourceExtensions';
-import { loadConfig } from './storage/ApiScopeStorage';
+import { apiscopeExists, loadConfig } from './storage/ApiScopeStorage';
 import { projectDetectedMessage } from './core/projectLabel';
 import { openCollectionRequestSource } from './webview/openRequestSource';
 
@@ -40,6 +40,14 @@ export function activate(context: vscode.ExtensionContext) {
       treeDataProvider: collectionsTree,
       dragAndDropController: dragAndDrop,
     }))
+  );
+
+  context.subscriptions.push(
+    collectionsTreeView.onDidChangeVisibility((event) => {
+      if (event.visible) {
+        void collectionsTree?.refresh({ initialize: true });
+      }
+    })
   );
 
   registerSidebarCommands(context);
@@ -129,7 +137,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-      if (!root) {
+      if (!root || !apiscopeExists(root)) {
         return;
       }
 
@@ -152,7 +160,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   if (vscode.workspace.workspaceFolders?.length) {
-    void collectionsTree.refresh();
     void detectAndNotifyFramework(context);
   }
 }

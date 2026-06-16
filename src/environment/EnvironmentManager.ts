@@ -27,6 +27,7 @@ import { ApiResponse, EnvironmentVariable } from '../core/types';
 import { applyVariableCopy } from './copyVariable';
 import { detectBaseUrlForProject } from '../scanner/detectBaseUrl';
 import {
+  apiscopeExists,
   deleteEnvironmentFile,
   loadAllEnvironments,
   loadConfig,
@@ -48,8 +49,10 @@ export class EnvironmentManager {
       this.cachedEnvironments = stored;
       return stored;
     }
-    const env = this.createGeneratedEnvironment(workspaceRoot);
-    saveEnvironment(workspaceRoot, env);
+    const env = await this.buildGeneratedEnvironment(workspaceRoot);
+    if (apiscopeExists(workspaceRoot)) {
+      saveEnvironment(workspaceRoot, env);
+    }
     this.cachedEnvironments = [env];
     return [env];
   }
@@ -151,9 +154,18 @@ export class EnvironmentManager {
     const envs = await this.getEnvironments(workspaceRoot);
     const generated = envs.find((e) => e.id === GENERATED_ENVIRONMENT_ID);
     if (!generated) {
-      const created = this.createGeneratedEnvironment(workspaceRoot);
-      saveEnvironment(workspaceRoot, created);
-      this.cachedEnvironments = [created, ...envs.filter((e) => e.id !== GENERATED_ENVIRONMENT_ID)];
+      const created = await this.buildGeneratedEnvironment(workspaceRoot);
+      const withUrl = {
+        ...created,
+        variables: [{ name: 'baseUrl', value: baseUrl }],
+      };
+      if (apiscopeExists(workspaceRoot)) {
+        saveEnvironment(workspaceRoot, withUrl);
+      }
+      this.cachedEnvironments = [
+        withUrl,
+        ...envs.filter((e) => e.id !== GENERATED_ENVIRONMENT_ID),
+      ];
       return this.cachedEnvironments;
     }
 
@@ -165,7 +177,9 @@ export class EnvironmentManager {
       vars.unshift({ name: 'baseUrl', value: baseUrl });
     }
     const next = { ...generated, variables: vars };
-    saveEnvironment(workspaceRoot, next);
+    if (apiscopeExists(workspaceRoot)) {
+      saveEnvironment(workspaceRoot, next);
+    }
     const updated = envs.map((env) => (env.id === GENERATED_ENVIRONMENT_ID ? next : env));
     this.cachedEnvironments = updated;
     return updated;
@@ -410,8 +424,8 @@ export class EnvironmentManager {
     return updated;
   }
 
-  private createGeneratedEnvironment(workspaceRoot: string): Environment {
-    const baseUrl = 'http://localhost:8080';
+  private async buildGeneratedEnvironment(workspaceRoot: string): Promise<Environment> {
+    const baseUrl = await detectBaseUrlForProject(workspaceRoot);
     return {
       id: GENERATED_ENVIRONMENT_ID,
       name: GENERATED_ENVIRONMENT_NAME,
